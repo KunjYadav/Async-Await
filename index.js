@@ -12,7 +12,7 @@ function saveToLocalStorage(event) {
       phonenumber
   }
 
-  axios.post("https://crudcrud.com/api/c8af1619363f49049fd5331454cb7865/appointmentData", obj)
+  axios.post("https://crudcrud.com/api/63e65975a939451b875dc5bbe3499bec/appointmentData", obj)
   .then((response) => {
     showNewUserOnScreen(response.data)
     // console.log(response)
@@ -27,7 +27,7 @@ function saveToLocalStorage(event) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  axios.get("https://crudcrud.com/api/c8af1619363f49049fd5331454cb7865/appointmentData")
+  axios.get("https://crudcrud.com/api/63e65975a939451b875dc5bbe3499bec/appointmentData")
   .then((response) => {
     console.log(response)
 
@@ -46,7 +46,7 @@ function showNewUserOnScreen(user){
   const parentNode = document.getElementById('listOfUsers');
   const childHTML = `<li id=${user._id}> ${user.name} - ${user.email} - ${user.phonenumber}
   <button onclick=deleteUser('${user._id}')> Delete User </button>
-  <button onclick=editUserDetails('${user._id}','${user.name}','${user.phonenumber}')>Edit User </button>
+  <button onclick=editUserDetails('${user.email}','${user.name}','${user.phonenumber}','${user._id}')>Edit User </button>
   </li>`
 
   parentNode.innerHTML = parentNode.innerHTML + childHTML;
@@ -54,19 +54,19 @@ function showNewUserOnScreen(user){
 
 //Edit User
 
-function editUserDetails(emailId, name, phonenumber){
+function editUserDetails(emailId, name, phonenumber, userId){
 
   document.getElementById('email').value = emailId;
   document.getElementById('username').value = name;
-  document.getElementById('phonenumber').value =phonenumber;
+  document.getElementById('phonenumber').value = phonenumber;
 
-  deleteUser(emailId)
+  deleteUser(userId)
 }
 
 // deleteUser('abc@gmail.com')
 
 function deleteUser(userId){
-  axios.delete(`https://crudcrud.com/api/c8af1619363f49049fd5331454cb7865/appointmentData/${userId}`)
+  axios.delete(`https://crudcrud.com/api/63e65975a939451b875dc5bbe3499bec/appointmentData/${userId}`)
   .then((response) => {
     removeUserFromScreen(userId)
   })
