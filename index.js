@@ -12,7 +12,7 @@ function saveToLocalStorage(event) {
       phonenumber
   }
 
-  axios.post("https://crudcrud.com/api/6f72d71e0df24ee8b500cf541be43bdd/appointmentData", obj)
+  axios.post("https://crudcrud.com/api/c8af1619363f49049fd5331454cb7865/appointmentData", obj)
   .then((response) => {
     showNewUserOnScreen(response.data)
     // console.log(response)
@@ -27,7 +27,7 @@ function saveToLocalStorage(event) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  axios.get("https://crudcrud.com/api/6f72d71e0df24ee8b500cf541be43bdd/appointmentData")
+  axios.get("https://crudcrud.com/api/c8af1619363f49049fd5331454cb7865/appointmentData")
   .then((response) => {
     console.log(response)
 
@@ -41,10 +41,12 @@ window.addEventListener("DOMContentLoaded", () => {
 })
 
 function showNewUserOnScreen(user){
+
+
   const parentNode = document.getElementById('listOfUsers');
-  const childHTML = `<li id=${user.email}> ${user.name} - ${user.email} - ${user.phonenumber}
-  <button onclick=deleteUser('${user.email}')> Delete User </button>
-  <button onclick=editUserDetails('${user.email}','${user.name}','${user.phonenumber}')>Edit User </button>
+  const childHTML = `<li id=${user._id}> ${user.name} - ${user.email} - ${user.phonenumber}
+  <button onclick=deleteUser('${user._id}')> Delete User </button>
+  <button onclick=editUserDetails('${user._id}','${user.name}','${user.phonenumber}')>Edit User </button>
   </li>`
 
   parentNode.innerHTML = parentNode.innerHTML + childHTML;
@@ -63,16 +65,25 @@ function editUserDetails(emailId, name, phonenumber){
 
 // deleteUser('abc@gmail.com')
 
-function deleteUser(emailId){
-  console.log(emailId)
-  localStorage.removeItem(emailId);
-  removeUserFromScreen(emailId);
+function deleteUser(userId){
+  axios.delete(`https://crudcrud.com/api/c8af1619363f49049fd5331454cb7865/appointmentData/${userId}`)
+  .then((response) => {
+    removeUserFromScreen(userId)
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+ 
+  // console.log(emailId)
+  // localStorage.removeItem(emailId);
+  // removeUserFromScreen(emailId);
 
 }
 
-function removeUserFromScreen(emailId){
+function removeUserFromScreen(userId){
   const parentNode = document.getElementById('listOfUsers');
-  const childNodeToBeDeleted = document.getElementById(emailId);
-
+  const childNodeToBeDeleted = document.getElementById(userId);
+  if(childNodeToBeDeleted) {
   parentNode.removeChild(childNodeToBeDeleted)
+  }
 }
