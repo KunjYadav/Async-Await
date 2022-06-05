@@ -18,6 +18,7 @@ function saveToLocalStorage(event) {
     // console.log(response)
   })
   .catch((err) => {
+    document.body.innerHTML = document.body.innerHTML + "<h4> Something went wrong </h4>"
     console.log(err)
   })
 
@@ -26,20 +27,22 @@ function saveToLocalStorage(event) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  const localStorageObj = localStorage;
-  const localstoragekeys  = Object.keys(localStorageObj)
+  axios.get("https://crudcrud.com/api/6f72d71e0df24ee8b500cf541be43bdd/appointmentData")
+  .then((response) => {
+    console.log(response)
 
-  for(var i =0; i< localstoragekeys.length; i++){
-      const key = localstoragekeys[i]
-      const userDetailsString = localStorageObj[key];
-      const userDetailsObj = JSON.parse(userDetailsString);
-      showNewUserOnScreen(userDetailsObj)
-  }
+    for(var i=0; i<response.data.length; i++) {
+      showNewUserOnScreen(response.data[i])
+    }
+  })
+  .catch((error) => {
+    console.log(error)
+  })
 })
 
 function showNewUserOnScreen(user){
   const parentNode = document.getElementById('listOfUsers');
-  const childHTML = `<li id=${user.email}> ${user.name} - ${user.email}
+  const childHTML = `<li id=${user.email}> ${user.name} - ${user.email} - ${user.phonenumber}
   <button onclick=deleteUser('${user.email}')> Delete User </button>
   <button onclick=editUserDetails('${user.email}','${user.name}','${user.phonenumber}')>Edit User </button>
   </li>`
