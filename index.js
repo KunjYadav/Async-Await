@@ -1,89 +1,83 @@
-function saveToLocalStorage(event) {
-  event.preventDefault();
-  const name = event.target.username.value;
-  const email = event.target.emailId.value;
-  const phonenumber = event.target.phonenumber.value;
-  // localStorage.setItem('name', name);
-  // localStorage.setItem('email', email);
-  // localStorage.setItem('phonenumber', phonenumber)
-  const obj = {
-      name,
-      email,
-      phonenumber
+class Node {
+  constructor(value) {
+    this.value = value;
+    this.right = null;
+    this.left = null;
   }
-
-  axios.post("https://crudcrud.com/api/63e65975a939451b875dc5bbe3499bec/appointmentData", obj)
-  .then((response) => {
-    showNewUserOnScreen(response.data)
-    // console.log(response)
-  })
-  .catch((err) => {
-    document.body.innerHTML = document.body.innerHTML + "<h4> Something went wrong </h4>"
-    console.log(err)
-  })
-
-  // localStorage.setItem(obj.email, JSON.stringify(obj))
-  // showNewUserOnScreen(obj)
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  axios.get("https://crudcrud.com/api/63e65975a939451b875dc5bbe3499bec/appointmentData")
-  .then((response) => {
-    console.log(response)
-
-    for(var i=0; i<response.data.length; i++) {
-      showNewUserOnScreen(response.data[i])
+class BinarySearchTree {
+  constructor() {
+    this.root = null;
+  }
+  //inserts a number into the tree. Returns the entire tree.
+  insert(value) {
+    const newNode = new Node(value);
+    if (!this.root) {
+      this.root = newNode;
+      return this;
     }
-  })
-  .catch((error) => {
-    console.log(error)
-  })
-})
-
-function showNewUserOnScreen(user){
-
-
-  const parentNode = document.getElementById('listOfUsers');
-  const childHTML = `<li id=${user._id}> ${user.name} - ${user.email} - ${user.phonenumber}
-  <button onclick=deleteUser('${user._id}')> Delete User </button>
-  <button onclick=editUserDetails('${user.email}','${user.name}','${user.phonenumber}','${user._id}')>Edit User </button>
-  </li>`
-
-  parentNode.innerHTML = parentNode.innerHTML + childHTML;
-}
-
-//Edit User
-
-function editUserDetails(emailId, name, phonenumber, userId){
-
-  document.getElementById('email').value = emailId;
-  document.getElementById('username').value = name;
-  document.getElementById('phonenumber').value = phonenumber;
-
-  deleteUser(userId)
-}
-
-// deleteUser('abc@gmail.com')
-
-function deleteUser(userId){
-  axios.delete(`https://crudcrud.com/api/63e65975a939451b875dc5bbe3499bec/appointmentData/${userId}`)
-  .then((response) => {
-    removeUserFromScreen(userId)
-  })
-  .catch((err) => {
-    console.log(err)
-  })
- 
-  // console.log(emailId)
-  // localStorage.removeItem(emailId);
-  // removeUserFromScreen(emailId);
-
-}
-
-function removeUserFromScreen(userId){
-  const parentNode = document.getElementById('listOfUsers');
-  const childNodeToBeDeleted = document.getElementById(userId);
-  if(childNodeToBeDeleted) {
-  parentNode.removeChild(childNodeToBeDeleted)
+    let current = this.root;
+    const rnLoop = true;
+    while (rnLoop) {
+      if (value === current.value) return undefined;
+      if (value < current.value) {
+        if (!current.left) {
+          current.left = newNode;
+          return this;
+        }
+        current = current.left;
+      } else {
+        if (!current.right) {
+          current.right = newNode;
+          return this;
+        }
+        current = current.right;
+      }
+    }
+  }
+  //finds the given number and returns it. If its not found, returns `null` or `undefined`.
+  find(value) {
+    if (!this.root) return null;
+    let current = this.root;
+    const rnLoop = true;
+    while (rnLoop) {
+      if (!current) return undefined;
+      if (value === current.value) return current;
+      if (value < current.value) {
+        current = current.left;
+      } else {
+        current = current.right;
+      }
+    }
+  }
+  //checks if a given number exists in the tree. If its in the tree, returns `true`, otherwise `false`
+  contains(value) {
+    if (!this.root) return null;
+    let current = this.root;
+    const rnLoop = true;
+    while (rnLoop) {
+      if (!current) return false;
+      if (value === current.value) return true;
+      if (value < current.value) {
+        current = current.left;
+      } else {
+        current = current.right;
+      }
+    }
   }
 }
+
+const BST = new BinarySearchTree();
+BST.insert(10); //returns the entire list
+BST.insert(6); //returns the entire list
+BST.insert(2);
+BST.insert(20);
+BST.insert(34);
+BST.insert(69);
+BST.insert(4);
+BST.find(4); //returns `Node {value: 2, right: Node, left: null}`
+BST.find(20);
+BST.find(123); //returns `undefined`
+BST.contains(6); //returns `true`
+BST.contains(123); //returns `false`
